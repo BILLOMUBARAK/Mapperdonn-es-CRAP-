@@ -1,0 +1,166 @@
+---
+title: "tp2MapperDonnées"
+author: "Mamadou Billo Diallo"
+date: "2023-09-14"
+output:
+  word_document: default
+  html_document: default
+---
+
+# Tâche 1 : Réflexion
+
+
+  -Il est important de visualiser les variables et les données pour comprendre ce que les données reflètent afin de:
+Faciliter la communication et la compréhension des données
+Faciliter la prise de décisions importantes 
+Faciliter l'observation des anomalies;
+
+   -Mapper des données pour représenter graphiquement l'esthétique consiste a associé des variables importantes de la base de données afin de les visualiser tout en insérant des couleurs, des forme, des position... pour mieux lire le résultat de la visualisation;
+
+  -Les données mappées de la vidéo de Roslin sont des données qui décrivent l'avancée des pays pauvre et des pays riches (santé et richesse) au fil des ans de 1810 à 2009 et donc le Pib par habitant en fonction des espérances de la population.
+ Les données ont été mappé esthétiquement avec une couleur qui décrit les continents, et une taille qui décrit la population tout en visualisant en forme de point;
+
+ 
+
+
+# Tâche 2 : Le Seigneur des Anneaux
+
+## Charger et nettoyer les données
+
+Nous chargeons, restructurons et nettoyons d'abord les données.
+
+```{r load-clean-data, warnings=FALSE, message=FALSE}
+# Vous n'aurez besoin que de la bibliothèque tidyverse pour cet exercice
+library(tidyverse)
+
+# Charger les jeux de données séparés
+communauté <- read_csv("data/The_Fellowship_Of_The_Ring.csv")
+tt <- read_csv("data/The_Two_Towers.csv")
+rotk <- read_csv("data/The_Return_Of_The_King.csv")
+
+# bind_rows() empile les blocs de données les uns sur les autres
+lotr_wide <- bind_rows(communauté, tt, rotk) %>%
+  # Faites de la colonne Film une variable catégorielle (facteur) et placez-la dans
+  # ordonner l'apparition des catégories (pour que les films soient dans le bon ordre)
+  mutate(Film = fct_inorder(Film))
+
+# Rendez ces données larges bien rangées
+lotr <- lotr_wide %>%
+  # C'est la nouvelle façon de rendre les données longues
+  pivot_longer(cols = c(Female, Male),
+               names_to = "Sexe", values_to = "Mots")
+```
+
+## Nombre total de mots prononcés par race
+```{r}
+lotr_Mots_total<-lotr %>%
+  group_by(Race)%>%
+  summarise(total=sum(Mots),
+            number=n())
+lotr_Mots_total
+```
+Le nombre total de mots prononcés par race est: 
+Elf:3737
+Hobbit 8796
+Man:8712
+##Nombre des mots prononcés par les hobbits masculins
+
+```{r}
+lotr_Mots_sexe<-lotr %>%
+  group_by(Race,Sexe)%>%
+  summarise(total=sum(Mots),
+            number=n())
+lotr_Mots_sexe
+```
+Les hobbit masculin ont prononcés 8780 mots.
+
+## representation par graphe du Nombre total de mots prononcés par race
+```{r}
+ggplot(data=lotr_Mots_total,mapping=aes(x=Race,y=total,fill=Race))+
+geom_col()
+```
+Nous observons que les deux races Hobbit et Man atteignent la barre des 8000 mots contrairement à Elf qui atteigne 4000;
+
+## representation par graphe du Nombre des mots prononcés par les hobbits masculins
+```{r}
+ggplot(data=lotr_Mots_sexe,mapping=aes(x=Race,y=total,fill=Sexe))+
+geom_col(position = position_dodge())+
+ facet_wrap(vars(Sexe), ncol = 1)
+
+
+```
+Nous remarquons la race Hobbit masculin   qui a prononcé plus de 8000 mots.
+
+## Course
+
+Une certaine race domine-t-elle toute la trilogie ? (indice : regrouper par `Race`)
+
+```{r}
+ggplot(data=lotr_Mots_total,mapping=aes(x=Race,y=total,fill=Race))+
+geom_col()
+```
+La Race Hobbit domine toute la triologie avec juste quelques mots au dessus de la Race Man;
+
+## Genre et cinéma
+
+Est-ce qu'un certain genre domine un film ? (lol bien sûr que c'est le cas, mais quand même, représentez-le graphiquement) (Astuce : groupez à la fois par `Gender` et `Film`.) Expérimentez avec le remplissage par `Gender` ou `Film` et le facettage par `Gender` ou `Film`.
+
+```{r}
+lotr_Mots_Gender_Film<-lotr %>%
+  group_by(Film,Sexe)%>%
+  summarise(total=sum(Mots),
+            number=n())
+lotr_Mots_Gender_Film
+```
+```{r}
+ggplot(data=lotr_Mots_Gender_Film,mapping = aes(x=total,y=Film,fill=Sexe))+
+  geom_col(position = position_dodge())+
+ facet_wrap(vars(Sexe),ncol=1)
+  
+```
+
+
+Nous pouvons observer que le sexe masculin domine 
+
+
+## Course et cinéma
+
+La race dominante diffère-t-elle d'un film à l'autre ? (Astuce : regrouper à la fois par `Race` et `Film`.) Expérimentez avec le remplissage par `Race` ou `Film` et le facettage par `Race` ou `Film`.
+
+```{r}
+lotr_Mots_Race_Film<-lotr %>%
+  group_by(Race,Film)%>%
+  summarise(total=sum(Mots),
+            number=n())
+lotr_Mots_Race_Film
+
+```
+```{r}
+ggplot(data=lotr_Mots_Race_Film,mapping = aes(x=total,y=Film,fill=Race))+
+  geom_col(position=position_dodge())+
+  facet_wrap(vars(Race),ncol=1)
+```
+Effectivement la race dominante diffère d'un film a un autre par exemple nous pouvons observer le Hobbit domine avec le film The Fellowship of The Ring tandisque pour le film The two Towers est dominé par la race Man;
+
+
+## Race et genre et film
+
+Créez un graphique qui visualise simultanément le nombre de mots prononcés par race, sexe et film. Utilisez le bloc de données "lotr" complet. Vous n'avez pas besoin de créer un nouvel ensemble de données résumées (avec `group_by(Race, Gender, Film)`) car les données d'origine ont déjà une ligne pour chacune d'entre elles (vous pourriez créer un ensemble de données résumées, mais il serait identique à la version complète).
+```{r}
+ggplot(data=lotr,mapping = aes(x=Mots,y=Film,fill=Sexe))+
+  geom_col(position=position_dodge())+
+  facet_wrap(vars(Race),ncol = 1)
+```
+Nous  pouvons observer ce graphique qui visualise simultanément le nombre de mots prononcé par race,sexe et film;
+
+
+Vous devez afficher `Race`, `Gender` et `Film` en même temps, mais vous n'avez que deux esthétiques possibles (`x` et `fill`), vous devrez donc également faire face à la troisième. Jouez avec différentes combinaisons (par exemple, essayez `x = Race`, puis `x = Film`) jusqu'à ce que vous en trouviez une qui raconte l'histoire la plus claire. Pour vous amuser, ajoutez un calque `labs()` pour ajouter un titre, un sous-titre et une légende.
+
+```{r}
+ggplot(data=lotr,mapping = aes(x=Race,y=Sexe,fill=Film))+
+  geom_col(position = position_dodge())+
+  labs(title="Representation de la Race ",subtitle = " fill avec le Film",caption = "visualisation",x = "Les Races", y ="Le genre")
+  
+#NB: j'ai rechercher jai pas trouvé un moyen de le faire avec x et fill uniquement 
+
+```

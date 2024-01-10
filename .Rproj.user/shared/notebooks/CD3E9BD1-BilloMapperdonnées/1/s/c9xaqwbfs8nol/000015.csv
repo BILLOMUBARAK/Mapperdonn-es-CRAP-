@@ -1,0 +1,6 @@
+"0","lotr_Mots_sexe<-lotr %>%"
+"0","  group_by(Race,Sexe)%>%"
+"0","  summarise(total=sum(Mots),"
+"0","            number=n())"
+"2","`summarise()` has grouped output by 'Race'. You can override using the `.groups` argument."
+"0","lotr_Mots_sexe"

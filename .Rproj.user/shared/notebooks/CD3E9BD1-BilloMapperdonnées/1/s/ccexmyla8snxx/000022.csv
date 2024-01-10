@@ -1,0 +1,3 @@
+"0","ggplot(data=lotr,mapping = aes(x=Race,y=Sexe,fill=Film))+"
+"0","  geom_col(position = position_dodge())+"
+"0","  labs(title=""Representation de la Race "",subtitle = "" fill avec le Film"",caption = ""visualisation"",x = ""Les Races"", y =""Le genre"")"

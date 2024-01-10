@@ -1,0 +1,7 @@
+"2","Warning in gzfile(file, ""wb"") :"
+"2","
+ "
+"2"," cannot open compressed file 'C:/Users/Mamadou Billo/Documents/Automne 2023/visualisation de données/DEVOIR/2/Devoir 2-20230911/Devoir - mapper des données sur un graphique/Tp2Mapperdesdonnées/.Rproj.user/69388BD5/unsaved-notebooks/F9B962D4/1/clcvjaknuxgmj_t/68bba1f3f845404f8a4b59700ff4539f.snapshot', probable reason 'No such file or directory'
+"
+"2","Error in gzfile(file, ""wb"") : cannot open the connection
+"

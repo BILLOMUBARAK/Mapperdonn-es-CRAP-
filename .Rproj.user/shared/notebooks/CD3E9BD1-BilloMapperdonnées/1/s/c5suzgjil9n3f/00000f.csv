@@ -1,0 +1,2 @@
+"0","ggplot(data=lotr_Mots_total,mapping=aes(x=Race,y=total,fill=Race))+"
+"0","geom_col()"

@@ -1,0 +1,8 @@
+"0","lotr_Mots_total<-lotr %>%"
+"0","  group_by(Race)%>%"
+"0","  summarise(total=sum(Mots),"
+"0","            number=n())"
+"0","lotr_Mots"
+"2","Error in tempfile(pattern = ""_rs_rdf_"", tmpdir = outputFolder, fileext = "".rdf"") : 
+  temporary name too long
+"

@@ -1,0 +1,3 @@
+"0","ggplot(data=lotr_Mots_Race_Film,mapping = aes(x=total,y=Film,fill=Race))+"
+"0","  geom_col(position=position_dodge())+"
+"0","  facet_wrap(vars(Race),ncol=1)"
